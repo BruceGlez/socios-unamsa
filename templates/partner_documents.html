@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Documentos de {{ socio.username }}</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tipo de Documento</th>
+            <th>Fecha de Subida</th>
+            <th>Ver</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for doc in documentos %}
+        <tr>
+            <td>{{ doc.doc_type }}</td>
+            <td>{{ doc.date_uploaded.strftime('%Y-%m-%d') }}</td>
+            <td>
+                <a href="{{ url_for('static', filename=doc.file_path) }}" target="_blank">Ver</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Volver a la Lista de Socios</a>
+{% endblock %}

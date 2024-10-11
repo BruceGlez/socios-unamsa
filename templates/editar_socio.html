@@ -1,0 +1,93 @@
+<!-- templates/editar_socio.html -->
+{% extends "base.html" %}
+{% block content %}
+<h2>Editar Socio</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        {{ form.nombre.label }}
+        {{ form.nombre(class="form-control") }}
+        {% for error in form.nombre.errors %}
+            <span class="text-danger">{{ error }}</span>
+        {% endfor %}
+    </div>
+    <div class="form-group">
+        {{ form.apellido_paterno.label }}
+        {{ form.apellido_paterno(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.apellido_materno.label }}
+        {{ form.apellido_materno(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.rfc.label }}
+        {{ form.rfc(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.curp.label }}
+        {{ form.curp(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.fecha_nacimiento.label }}
+        {{ form.fecha_nacimiento(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.direccion.label }}
+        {{ form.direccion(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.email.label }}
+        {{ form.email(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.telefono_fijo.label }}
+        {{ form.telefono_fijo(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.telefono_celular.label }}
+        {{ form.telefono_celular(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.estado_marital.label }}
+        {{ form.estado_marital(class="form-control") }}
+    </div>
+    <!-- Spouse fields -->
+    <div id="spouse-fields">
+        <div class="form-group">
+            {{ form.nombre_conyuge.label }}
+            {{ form.nombre_conyuge(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.apellido_paterno_conyuge.label }}
+            {{ form.apellido_paterno_conyuge(class="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ form.apellido_materno_conyuge.label }}
+            {{ form.apellido_materno_conyuge(class="form-control") }}
+        </div>
+    </div>
+    {{ form.submit(class="btn btn-primary") }}
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var maritalStatusField = document.getElementById("estado_marital");
+        var spouseFields = document.getElementById("spouse-fields");
+
+        function toggleSpouseFields() {
+            if (maritalStatusField.value === "casado") {
+                spouseFields.style.display = "block";
+            } else {
+                spouseFields.style.display = "none";
+                document.getElementById("nombre_conyuge").value = "";
+                document.getElementById("apellido_paterno_conyuge").value = "";
+                document.getElementById("apellido_materno_conyuge").value = "";
+            }
+        }
+
+        toggleSpouseFields();
+
+        maritalStatusField.addEventListener("change", toggleSpouseFields);
+    });
+</script>
+{% endblock %}

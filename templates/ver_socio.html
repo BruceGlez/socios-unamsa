@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- At the top of ver_socio.html -->
+<a href="{{ url_for('editar_socio', socio_id=socio.id) }}" class="btn btn-warning">Editar Socio</a>
+
+<h2>Detalles del Socio</h2>
+<p><strong>Nombre:</strong> {{ socio.nombre }} {{ socio.apellido_paterno }} {{ socio.apellido_materno }}</p>
+<p><strong>RFC:</strong> {{ socio.rfc }}</p>
+<p><strong>CURP:</strong> {{ socio.curp }}</p>
+<p><strong>Fecha de Nacimiento:</strong> {{ socio.fecha_nacimiento.strftime('%Y-%m-%d') }}</p>
+<p><strong>Dirección:</strong> {{ socio.direccion }}</p>
+<p><strong>Correo Electrónico:</strong> {{ socio.email }}</p>
+<p><strong>Teléfono Fijo:</strong> {{ socio.telefono_fijo }}</p>
+<p><strong>Teléfono Celular:</strong> {{ socio.telefono_celular }}</p>
+<p><strong>Estado Marital:</strong> {{ socio.estado_marital.value }}</p>
+{% if socio.estado_marital.value == 'Casado' %}
+    <h4>Información del Cónyuge</h4>
+    <p><strong>Nombre del Cónyuge:</strong> {{ socio.nombre_conyuge }} {{ socio.apellido_paterno_conyuge }} {{ socio.apellido_materno_conyuge }}</p>
+{% endif %}
+<h3>Documentos</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tipo de Documento</th>
+            <th>Fecha de Subida</th>
+            <th>Ver</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for doc in documentos %}
+        <tr>
+            <td>{{ doc.doc_type }}</td>
+            <td>{{ doc.date_uploaded.strftime('%Y-%m-%d') }}</td>
+            <td>
+                <a href="{{ url_for('static', filename=doc.file_path) }}" target="_blank">Ver</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{{ url_for('consultar_socios') }}" class="btn btn-secondary">Volver a la Lista de Socios</a>
+{% endblock %}

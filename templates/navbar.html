@@ -1,0 +1,36 @@
+<!-- templates/navbar.html -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="{{ url_for('home') }}">Seguimiento de Documentos</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
+          aria-expanded="false" aria-label="Alternar navegación">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav ml-auto">
+      {% if current_user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('dashboard') }}">Lista de Socios</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('registrar_socio') }}">Registrar Socio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('upload') }}">Subir Documento</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('consultar_socios') }}">Consultar Socios</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('logout') }}">Cerrar Sesión</a>
+        </li>
+      {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('login') }}">Iniciar Sesión</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('register') }}">Registrarse</a>
+        </li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>

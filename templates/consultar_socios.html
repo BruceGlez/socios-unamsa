@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Información de Socios</h2>
+<a href="{{ url_for('exportar_socios') }}" class="btn btn-success mb-3">Exportar como CSV</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Nombre Completo</th>
+            <th>RFC</th>
+            <th>CURP</th>
+            <th>Fecha de Nacimiento</th>
+            <th>Correo Electrónico</th>
+            <th>Estado Marital</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for socio in socios %}
+        <tr>
+            <td>{{ socio.nombre }} {{ socio.apellido_paterno }} {{ socio.apellido_materno }}</td>
+            <td>{{ socio.rfc }}</td>
+            <td>{{ socio.curp }}</td>
+            <td>{{ socio.fecha_nacimiento.strftime('%Y-%m-%d') }}</td>
+            <td>{{ socio.email }}</td>
+            <td>{{ socio.estado_marital.value }}</td>
+            <td>
+                <a href="{{ url_for('ver_socio', socio_id=socio.id) }}" class="btn btn-info btn-sm">Ver Detalles</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

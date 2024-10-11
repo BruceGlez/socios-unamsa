@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        h2 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h2>Reporte de Socios</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre Completo</th>
+                <th>RFC</th>
+                <th>CURP</th>
+                <th>Fecha de Nacimiento</th>
+                <th>Correo Electrónico</th>
+                <th>Estado Marital</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for socio in socios %}
+            <tr>
+                <td>{{ socio.nombre }} {{ socio.apellido_paterno }} {{ socio.apellido_materno }}</td>
+                <td>{{ socio.rfc }}</td>
+                <td>{{ socio.curp }}</td>
+                <td>{{ socio.fecha_nacimiento.strftime('%Y-%m-%d') }}</td>
+                <td>{{ socio.email }}</td>
+                <td>{{ socio.estado_marital.value }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

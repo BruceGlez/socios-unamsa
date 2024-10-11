@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Bienvenido al Seguimiento de Documentos</h1>
+    <p class="lead">Gestiona y sigue tus documentos de manera eficiente.</p>
+    <hr class="my-4">
+    {% if not current_user.is_authenticated %}
+    <p>Por favor, inicia sesión o regístrate para continuar.</p>
+    <a class="btn btn-primary btn-lg" href="{{ url_for('login') }}" role="button">Iniciar Sesión</a>
+    <a class="btn btn-secondary btn-lg" href="{{ url_for('register') }}" role="button">Registrarse</a>
+    {% else %}
+    <a class="btn btn-primary btn-lg" href="{{ url_for('dashboard') }}" role="button">Ir al Dashboard</a>
+    {% endif %}
+</div>
+{% endblock %}

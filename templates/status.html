@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Estado de Documentos para {{ socio.nombre }} {{ socio.apellido_paterno }}</h2>
+
+<h4>Documentos Requeridos:</h4>
+{% if pending_docs %}
+    <p>Documentos pendientes:</p>
+    <ul>
+        {% for doc in pending_docs %}
+        <li>{{ doc }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Todos los documentos requeridos han sido enviados.</p>
+{% endif %}
+
+<h4>Documentos Opcionales Subidos:</h4>
+{% if uploaded_optional_docs %}
+    <ul>
+        {% for doc in uploaded_optional_docs %}
+        <li>{{ doc }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No se han subido documentos opcionales.</p>
+{% endif %}
+
+<h4>Documentos Opcionales Pendientes:</h4>
+{% if pending_optional_docs %}
+    <ul>
+        {% for doc in pending_optional_docs %}
+        <li>{{ doc }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No hay documentos opcionales pendientes.</p>
+{% endif %}
+
+<a href="{{ url_for('upload') }}" class="btn btn-primary mt-3">Subir Documento</a>
+<a href="{{ url_for('dashboard') }}" class="btn btn-secondary mt-3">Volver a la Lista de Socios</a>
+{% endblock %}
