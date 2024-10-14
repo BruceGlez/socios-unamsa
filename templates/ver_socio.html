@@ -24,6 +24,7 @@
             <th>Tipo de Documento</th>
             <th>Fecha de Subida</th>
             <th>Ver</th>
+            <th>Acciones</th> <!-- New column for actions -->
         </tr>
     </thead>
     <tbody>
@@ -33,6 +34,11 @@
             <td>{{ doc.date_uploaded.strftime('%Y-%m-%d') }}</td>
             <td>
                 <a href="{{ url_for('static', filename=doc.file_path) }}" target="_blank">Ver</a>
+            </td>
+            <td>
+                <form action="{{ url_for('eliminar_documento', doc_id=doc.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este documento?');">
+                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                </form>
             </td>
         </tr>
         {% endfor %}

@@ -144,24 +144,27 @@ def ver_socio(socio_id):
 @login_required
 def upload():
     form = UploadForm()
-    with app.app_context():
-        socios = Socio.query.filter_by(user_id=current_user.id).all()
+    socios = Socio.query.filter_by(user_id=current_user.id).all()
     if not socios:
         flash('No hay socios registrados. Por favor, registra un socio primero.', 'warning')
         return redirect(url_for('registrar_socio'))
     form.socio.choices = [(s.id, f"{s.nombre} {s.apellido_paterno}") for s in socios]
 
-    if request.method == 'POST':
-        selected_socio = Socio.query.get(form.socio.data)
-        estado_marital = selected_socio.estado_marital.value
-    else:
-        selected_socio = socios[0]
-        estado_marital = selected_socio.estado_marital.value
-
-    required_docs = get_required_docs(estado_marital)
-    form.doc_type.choices = [(doc, doc) for doc in required_docs + get_optional_docs()]
-
     if form.validate_on_submit():
+        selected_socio = Socio.query.get(form.socio.data)
+        # Check if a document of the same type already exists
+        existing_doc = Document.query.filter_by(socio_id=form.socio.data, doc_type=form.doc_type.data).first()
+        if existing_doc:
+            # Delete the existing file from disk
+            existing_file_path = os.path.join(app.config['UPLOAD_FOLDER'], os.path.basename(existing_doc.file_path))
+            if os.path.exists(existing_file_path):
+                os.remove(existing_file_path)
+            # Delete the existing document record
+            db.session.delete(existing_doc)
+            db.session.commit()
+            flash('El documento existente ha sido reemplazado.', 'info')
+
+        # Proceed to save the new document
         file = form.document.data
         filename = f"{uuid.uuid4()}_{file.filename}"
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -171,12 +174,34 @@ def upload():
             file_path=file_url,
             socio_id=form.socio.data
         )
-        with app.app_context():
-            db.session.add(document)
-            db.session.commit()
+        db.session.add(document)
+        db.session.commit()
         flash('¡Documento subido exitosamente!', 'success')
         return redirect(url_for('dashboard'))
+
+    # For GET requests or failed validation
+    if request.method == 'GET' or not form.validate_on_submit():
+        selected_socio = socios[0]
+        form.doc_type.choices = [(doc, doc) for doc in get_all_doc_types()]
     return render_template('upload.html', form=form)
+
+@app.route('/documento/<int:doc_id>/eliminar', methods=['POST'])
+@login_required
+def eliminar_documento(doc_id):
+    documento = Document.query.get_or_404(doc_id)
+    socio = Socio.query.get(documento.socio_id)
+    if socio.user_id != current_user.id:
+        flash('No tienes permiso para eliminar este documento.', 'danger')
+        return redirect(url_for('dashboard'))
+    # Delete the file from disk
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], os.path.basename(documento.file_path))
+    if os.path.exists(file_path):
+        os.remove(file_path)
+    # Delete the document record
+    db.session.delete(documento)
+    db.session.commit()
+    flash('¡Documento eliminado exitosamente!', 'success')
+    return redirect(url_for('ver_socio', socio_id=socio.id))
 
 @app.route('/estado/<int:socio_id>')
 @login_required
@@ -294,6 +319,17 @@ def eliminar_socio(socio_id):
         db.session.commit()
     flash('¡Socio eliminado exitosamente!', 'success')
     return redirect(url_for('dashboard'))
+
+def get_all_doc_types():
+    # Return a list of all possible document types
+    return [
+        'Identificación Oficial',
+        'Comprobante de Domicilio',
+        'Acta de Nacimiento',
+        'Acta de Matrimonio',
+        'Comprobante de Ingresos',
+        # Add any additional document types here
+    ]
 
 if __name__ == '__main__':
     with app.app_context():

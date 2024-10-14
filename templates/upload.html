@@ -1,3 +1,4 @@
+<!-- templates/upload.html -->
 {% extends "base.html" %}
 {% block content %}
 <h2>Subir Documento</h2>
@@ -17,4 +18,11 @@
     </div>
     {{ form.submit(class="btn btn-primary") }}
 </form>
+
+<h3>Documentos ya subidos para este socio:</h3>
+<ul>
+    {% for doc in existing_docs %}
+    <li>{{ doc }}</li>
+    {% endfor %}
+</ul>
 {% endblock %}
